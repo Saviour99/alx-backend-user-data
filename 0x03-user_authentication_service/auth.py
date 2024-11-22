@@ -4,7 +4,9 @@
 Authentication module
 """
 
+
 import bcrypt
+
 
 def _hash_password(password: str) -> bytes:
     """Perform hashing of password
