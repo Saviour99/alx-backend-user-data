@@ -43,3 +43,17 @@ class DB:
             self._session.rollback()
             new_user = None
         return new_user
+
+    def find_user_by(self, **kwargs) -> User:
+        """find user based on a set of filter
+        """
+
+        for key in kwargs.keys():
+            if not hasattr(User, key):
+                raise InvalidRequestError()
+
+        user = self._session.query(User).filter_by(**kwargs).first()
+
+        if user:
+            return user
+        raise NoResultFound()
