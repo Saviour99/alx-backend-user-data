@@ -4,6 +4,7 @@
 Authentication module
 """
 
+
 import bcrypt
 from db import DB
 from user import User
