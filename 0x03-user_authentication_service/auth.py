@@ -1,23 +1,19 @@
 #!/usr/bin/env python3
-
+"""A module for authentication-related routines.
 """
-Authentication module
-"""
-
-
 import bcrypt
+from uuid import uuid4
+from typing import Union
+from sqlalchemy.orm.exc import NoResultFound
+
 from db import DB
 from user import User
-from sqlalchemy.orm.exc import NoResultFound
 
 
 def _hash_password(password: str) -> bytes:
-    """Perform hashing of password
+    """Hashes a password.
     """
-
-    pw = password.encode("utf-8")
-    hashed_pw = bcrypt.hashpw(pw, bcrypt.gensalt())
-    return hashed_pw
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
 
 class Auth:
@@ -25,17 +21,15 @@ class Auth:
     """
 
     def __init__(self):
-        """Initialize a new Auth instance
+        """Initializes a new Auth instance.
         """
         self._db = DB()
 
     def register_user(self, email: str, password: str) -> User:
-        """rEGISTER NEW USERS TO THE DB
+        """Adds a new user to the database.
         """
-        
         try:
             self._db.find_user_by(email=email)
-
         except NoResultFound:
             return self._db.add_user(email, _hash_password(password))
-        raise ValueError(f"User {email} already exists")
+        raise ValueError("User {} already exists".format(email))
